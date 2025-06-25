@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/Tyuris-creator/Task-Manager/issues"
   },
-  "homepage": "https://github.com/Tyuris-creator/Task-Manager#readme"
+  "homepage": "https://github.com/Tyuris-creator/Task-Manager#readme",
+  "devDependencies": {
+    "vite": "^7.0.0"
+  }
 }
