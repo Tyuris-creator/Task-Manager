@@ -4,20 +4,22 @@ import { connectDB } from "./config/db.js"
 import dotenv from "dotenv"
 import rateLimiter from "./middleware/rateLimiter.js"
 import cors from "cors"
+import path from "path"
 dotenv.config()
 
 const app = express()
-
+const __dirname = path.resolve()
 // middleware
-app.use(cors())
+
+if (process.env.NODE_ENV != "production") {
+  app.use(cors())
+}
 
 app.use(express.json()) // this middleware will parse JSON bodies: req.body
 
-app.get("/", (req,res)=>{
-  res.status(200).json({"intro":"this is an API made by Michail Tiurin!"})
-})
 
-app.get("/server", (req,res)=>{
+
+app.get("/server", (req, res) => {
   res.status(200).send("мой сервер!")
 })
 
@@ -28,9 +30,15 @@ app.use((req, res, next) => {
   next()
 })
 
-
-
 app.use("/api/notes", notesRoutes)
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")))
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"))
+  )
+}
 
 connectDB().then(() => {
   app.listen(process.env.PORT || 5001, () => {
